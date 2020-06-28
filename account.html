@@ -1,0 +1,150 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-storage.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+       <link rel="stylesheet" type="text/css" href="style.css">
+       <style>
+     .card{
+         position: absolute;
+         top: 50%;
+         left: 50%;
+         transform: translateX(-50%) translateY(-50%);
+         min-width: 310PX;
+         height: 500px;
+         background: white;
+         box-sizing: border-box;
+         padding: 20px;
+     }
+     .upper-container{
+         height: 175px;
+         outline: 20px solid #7F00FF;
+         background: #7F00FF;
+     }
+     .card img{
+         height: 150px !important;
+         width: 150px !important;
+         left: 50% !important;
+         top: 50% !important;
+         transform: translate(-80px,80px) !important;
+         border: 3px solid white;
+         border-radius: 50% !important;
+     }
+     .lower-container{
+         /* position: relative;
+         top: 5%; */
+         margin-top: 20px;
+         padding-top: 25px;
+     }
+     .card-content{
+         margin-top: 15px;
+         font-size: 15px;
+         font-weight: 300px;
+         line-height: 32px;
+         color: #333;
+     }
+     .card-content .fas, .card-content .fa{
+        color: indigo;
+     }
+       </style>
+    <title>Account</title>
+</head>
+<body>
+<!-- Cards -->
+<div class="container">
+<div class="row">
+<div class="col s12">
+<div class="card">
+<div class="upper-container">
+        <div class="card-image">
+                <img src="user.png" alt='' id="user-image">
+                </div>
+</div>
+<div class="lower-container">
+        <div class="card-content">
+            <span class="card-title" id="user-name"></span>
+            <p id="user-phone-p"><i class="fa fa-phone"> 
+            </i><span  id="user-phone"> </span>
+            </i></p>
+            <p><i class="fas fa-envelope"></i>
+                <span id="user-email"></span></p>
+            <p><i class="fas fa-book"></i>
+            <span  id="user-books"> </span> </p>
+            <p><i class="fas fa-file"></i><span id="books-size"> </span></p>
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+ <script>
+ // Your web app's Firebase configuration
+var firebaseConfig = {
+apiKey: "AIzaSyASR_JjTt8mjf3supyF1pHdNhD7FGV-0JU",
+authDomain: "polsdatabase-f8594.firebaseapp.com",
+databaseURL: "https://polsdatabase-f8594.firebaseio.com",
+projectId: "polsdatabase-f8594",
+storageBucket: "polsdatabase-f8594.appspot.com",
+messagingSenderId: "765894232102",
+appId: "1:765894232102:web:99c79908ee2791dd"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth= firebase.auth();
+const db=firebase.firestore();
+var user = firebase.auth().currentUser;
+firebase.auth().onAuthStateChanged(function(user) {
+  
+if (user != null) {
+  let count=0;
+    let dataSize=0;
+    db.collection(user.uid).onSnapshot (snapshot=>{
+	let changes=snapshot.docChanges();
+	changes.forEach(change=>{
+		if(change.type=="added") {
+            ++count;
+
+
+
+}
+		else if(change.type=='removed'){
+            --count;
+
+		}
+    dataSize+=change.doc.data().dataSize;
+
+	})
+    document.querySelector('#user-books').textContent=count+" books total";
+    let size=" "+(dataSize/1048576+" MB size");
+    document.querySelector('#books-size').textContent=size;
+
+ })
+  user.providerData.forEach(function (profile) {
+    const userName=profile.displayName;
+    const email=profile.email;
+    const photoURL= profile.photoURL;
+    const phone=profile.phoneNumber;
+    userName?document.querySelector('#user-name').
+    textContent=userName:document.querySelector('#user-name').style.display="none";
+    phone?document. querySelector('#user-phone').textContent=phone:document.
+    querySelector('#user-phone-p').style.display="none";
+    document.querySelector('#user-email').textContent=email;
+    const profilePicture=photoURL||"user.png";
+    document.querySelector("#user-image").setAttribute('src',profilePicture);
+  });
+  
+}
+else {
+      console.log("not signed in")
+  }
+});
+ </script>
+</body>
+</html>

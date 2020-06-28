@@ -1,0 +1,255 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+ 	<script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-auth.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+       <link rel="stylesheet" type="text/css" href="style.css">
+       <link rel="stylesheet" href="sweetalert2.min.css">
+
+       <style>
+        body{
+        background:  linear-gradient(rgba(25,25,112,0.5),rgba(25,25,112,0.5)),url(bgimage.jpg);
+	background-size: 100% 100%;
+    }
+    .section{
+        padding-top: 25vh;
+    }
+    .btn{
+	display:block;
+	width: 100%;
+	border-radius: 10px;
+}
+       </style>
+    <title>Authentication</title>
+</head>
+<body>
+
+    <section class="container section">
+    <div class="col s12 l6 offset-l2">
+        <ul class="tabs transparent">
+            <li class="tab col s6">
+                <a href="#sign-up" class="white-text text-darken-4">Sign Up</a>
+            </li>
+            <li class="tab col s6">
+                <a href="#sign-in" class="white-text text-darken-4">Sign In</a>
+            </li>
+        </ul>
+        <div class="col s12" id="sign-up">
+            <form id="signup-form" action="index.html">
+                <p class="flow-text white-text">Sign Up For Free</p>
+                <div class="input-field">
+                    <label for="signup-email">Your Email</label>
+                    <input type="email"id='signup-email' class="white-text validate input" required>
+                    <span class="helper-text" data-error="you must fill this field" id="signup-email-error"></span>
+                </div>
+                <div class="input-field">
+                        <label for="signup-password">Create password</label>
+                        <input type="password"id='signup-password' class="white-text validate input" required>
+                        <span class="helper-text" data-error="you must fill this field" id="signup-password-error"></span>
+    
+                    </div>							
+                <div class="input-field">
+                    <label for="confirm">Confirm Your password</label>
+                    <input type="password"id='confirm' class="white-text validate input" required>
+                    <span class="helper-text" data-error="you must fill this field" id="signup-confirm-error"></span>
+                </div>
+            <div class="input-field">
+                <input type="submit" class="btn grey lighten-4 black-text" value="Sign Up">
+            </div>
+            </form>
+        </div>
+        <div class="col s12" id="sign-in">
+            <form id="signin-form" action="index.html">
+                    <p class="flow-text white-text">Sign In with your account</p>
+    
+                    <div class="input-field">
+                        <label for="signin-email" class="">Your Email</label>
+                        <input type="email"id='signin-email' class="white-text validate input" required>
+                        <span class="helper-text" data-error="you must fill this field" id="signin-email-error"></span>
+    
+                    </div>
+    
+                    <div class="input-field">
+                            <label for="signin-password">Your password</label>
+                            <input type="password"id='signin-password' class="white-text validate input"required>
+                            <span class="helper-text" data-error="you must fill this field" id="signin-password-error"></span>
+                        </div>	
+                        <a href="forget-password.html">Forgot Password?</a>						
+                    <div class="input-field">
+                    <input type="submit" class="btn" value="Sign In">
+                </div>
+                </form>
+            </div>
+    </div>
+    <div class="row">
+        <div class="col s12 l6">
+            <a href="#" class="btn red ligten-1" id="sign-in-with-google">
+                    <i class="fab fa-google-plus-g"></i>
+                Sign In with Google</a>
+        </div>
+        <div class="col s12 l6">
+            <a href="#" class="btn indigo darken-2" id="sign-in-with-facebook">
+                    <i class="fab fa-facebook-f"></i>
+                Sign In with facebook</a>
+        </div>
+    
+    </div>
+    </section>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+apiKey: "AIzaSyASR_JjTt8mjf3supyF1pHdNhD7FGV-0JU",
+authDomain: "polsdatabase-f8594.firebaseapp.com",
+databaseURL: "https://polsdatabase-f8594.firebaseio.com",
+projectId: "polsdatabase-f8594",
+storageBucket: "polsdatabase-f8594.appspot.com",
+messagingSenderId: "765894232102",
+appId: "1:765894232102:web:99c79908ee2791dd"
+};
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth= firebase.auth();
+        </script>
+<script>
+const signupForm= document.querySelector("#signup-form");
+const email=document.querySelector('#signup-email');
+
+//Form validation
+const password=document.querySelector('#signup-password');
+const confirm=document.querySelector("#confirm");
+
+function validatePassword(){
+if(password.value!== confirm.value) {
+confirm.setCustomValidity("Passwords Don't Match");
+document.querySelector('#signup-confirm-error').dataset.error="passwords must match";
+return;
+
+} else {
+confirm.setCustomValidity('');
+}
+}
+
+password.onchange = validatePassword;
+confirm.onkeyup = validatePassword;
+
+//Authentication
+
+// //Signup
+signupForm.addEventListener('submit',(e)=>{
+  e.preventDefault();	
+  auth.createUserWithEmailAndPassword(email.value,password.value).then(cred=> {
+        signupForm.reset();
+        sendVerifaction();
+	}).catch(err=>{
+        Swal.fire({
+		  icon:'error',
+		  title:'OOPS!',
+          text:err.message,
+		  showConfirmButton:true,
+	  })  });
+    });
+//send verification link to the user email
+				function sendVerifaction(){
+	const user=auth.currentUser;
+	user.sendEmailVerification().then(()=>{
+        window.location='index.html';
+	}).catch(error=>{
+Swal.fire({
+		  icon:'error',
+		  title:'OOPS!',
+          text:error.message,
+		  showConfirmButton:true,
+	  })
+	})
+}
+//login
+const loginForm=document.querySelector('#signin-form');
+
+loginForm.addEventListener('submit',e=>{
+	e.preventDefault();
+	
+	const email=loginForm['signin-email'].value;
+	const password=loginForm['signin-password'].value;
+	auth.signInWithEmailAndPassword(email,password).
+	then(cred=>{
+		loginForm.reset();
+        window.location="index.html";
+	}).catch(err=>{
+        Swal.fire({
+		  icon:'error',
+		  title:'OOPS!',
+          text:err.message,
+		  showConfirmButton:true,
+	  })	});})
+
+
+// //signin with facebook
+const signInWithFacebook=document.querySelector("#sign-in-with-facebook");
+signInWithFacebook.addEventListener('click',(e)=>{
+  e.preventDefault();
+  const provider = new firebase.auth.FacebookAuthProvider();
+  firebase.auth().useDeviceLanguage();
+  firebase.auth().signInWithPopup(provider).then(function(result) {
+    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+    var token = result.credential.accessToken;
+    // The signed-in user info.
+    var user = result.user;
+    window.location='index.html';
+    // ...
+  }).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+    Swal.fire({
+		  icon:'error',
+		  title:'OOPS!',
+          text:error.message,
+		  showConfirmButton:true,
+	  })
+  });
+});
+//signin with google
+const signInWithGoogle=document.querySelector("#sign-in-with-google");
+signInWithGoogle.addEventListener('click',(e)=>{
+  e.preventDefault();
+  const provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(provider).then((result)=>{
+    window.location='index.html'
+
+  }).catch(error=>{
+    Swal.fire({
+		  icon:'error',
+		  title:'OOPS!',
+          text:error.message,
+		  showConfirmButton:true,
+	  })  });
+})
+  </script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        
+        <script>
+            
+        // setup materialize components
+$(document).ready(function(){
+		$('.tabs').tabs();
+  });
+        </script>
+        <script src="sweetalert2.all.js"></script>
+</body>
+</html>
+

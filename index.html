@@ -1,0 +1,502 @@
+<html lang="en">
+<head>
+	 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	<link rel="stylesheet" href="sweetalert2.min.css">
+	 <link rel="stylesheet" type="text/css" href="style.css">
+		<style>
+			.btn{
+				padding:0 10px;
+				border-radius: 5px;
+			}
+			.carousel p{
+				margin-right: 10vw;
+				margin-left: 10vw;
+			}
+			#uploading-progress{
+				position: absolute; 
+				top: 50%; 
+				left: 10%; 
+				right: 10%;
+				width: 80%;
+				}
+				#uploading-progress p{
+					color: white;
+					font-weight: bold;
+					font-size: 1.2rem;
+				}
+			progress{
+	-webkit-appearance: none;
+	appearance: none;
+	height: 30px; 
+	width: 100%;
+
+}
+			#uploader[value]::-webkit-progress-bar {  
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset; 
+  background-color:#eee;
+
+}
+
+		</style>
+
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+ 	<script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-storage.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-firestore.js"></script>
+</head>
+<body>
+<!-- Loading animation -->
+	<div class="loading-animtion">
+		<div class="loading-container">
+			<div class="box box1"></div>
+			<div class="box box2"></div>
+			<div class="box box3"></div>
+			<div class="box box4"></div>
+		</div>
+	</div>
+	
+<header>
+	<!-- Carousel images -->
+<div class="carousel carousel-slider center">
+		<div class="carousel-fixed-item center">
+			<a class="btn waves-effect white grey-text darken-text-2" id="wactch">watch video</a>
+		</div>
+		<div class="carousel-item red white-text" id="one" href="#one!">
+				<p class="white-text">“A reader lives a thousand lives before he dies . . . 
+					The man who never reads lives only one.” – George R.R. Martin
+				</p>
+		</div>
+		<div class="carousel-item amber white-text" id="two" href="#two!">
+				<p class="white-text">“I find television very educating. Every time somebody turns on the set,
+					I go into the other room and read a book.” – Groucho Marx
+			   </p>
+		</div>
+		<div class="carousel-item green white-text" id="three" href="#three!">
+				<p class="white-text">"So please, oh please, we beg, we pray, go throw your TV set away, 
+					and in its place you can install a lovely bookshelf on the wall." – Roald Dahl“</p>
+
+		</div>
+		<div class="carousel-item blue white-text" id="four" href="#four!">
+				<p class="white-text">“In the case of good books, the point is not to see how many of them you can get through, 
+					but rather how many can get through to you.” – Mortimer J. Adler
+				</p>
+	
+		</div>
+		</div>
+		<!-- uploading progress -->
+		<div id="uploading-progress" class="hide">
+			<progress id="uploader"min="0" value="" max="100"></progress>
+			<p>uploading please wait...</p>
+		</div>
+		<!-- Nav Bar -->
+<nav class="nav-wrapper black" id="nav">
+<a href="index.html" class="brand-logo left" id="brand-logo">Personal | Online | Library</a>
+<a href="#" class="sidenav-trigger" data-target="mobile-nav">
+	<i class="material-icons">menu</i>
+		<ul class="hide-on-med-and-down right">
+	<li><a href="about.html" class="hide"><i class="fas fa-info-circle "></i>
+		<span class="icons-text">About</span></a></li>
+	<li class="logged-in hide"><a href="account.html"><i class="fas fa-user-circle"></i>
+		<span class="icons-text">Account</span></a></li>
+		<li class="logged-in hide"><a href="#" class="upload-file ">
+			<i class="fas fa-upload white-text"></i>
+			<span class="icons-text white-text">Upload book</span>
+		</a></li>
+			<li title="download book from other website" data-target="download-modal" class="modal-trigger logged-in hide">
+				<a href="#"><i class="fas fa-download"></i>
+				<span class="icons-text">download</span></a></li>
+	<li class="logged-in hide"><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i>
+	<span class="icons-text">Sign Out</span></a></li>
+	<li class="logged-out hide"><a href="authentication.html"><i class="fas fa-sign-in-alt"></i>
+		<span class="icons-text">Sign In</span></a></li>
+</ul>  
+</nav>
+</header>
+<!-- SIDE NAV -->
+<ul class="sidenav grey darken-4" id="mobile-nav">
+	<li><a href="about.html" class="hide"><i class="fas fa-info-circle white-text "></i>
+		<span class="icons-text white-text">About</span></a></li>
+	<li class="logged-in hide"><a href="account.html"><i class="fas fa-user-circle white-text"></i>
+		<span class="icons-text white-text">Account</span></a></li>
+	<li class="logged-in hide"><a href="#" class='upload-file'>
+		<i class="fas fa-upload white-text"></i>
+		<span class="icons-text white-text"> Upload book</a></li>
+			<li title="download book from other website" data-target="download-modal" class="modal-trigger logged-in hide">
+				<a href="#"><i class="fas fa-download white-text"></i>
+				<span class="icons-text white-text">download</span></a></li>
+	<li class="logged-in hide"><a href="#" class="logout"><i class="fas fa-sign-out-alt white-text"></i>
+	<span class="icons-text white-text">Sign Out</span></a></li>
+	<li class="logged-out hide"><a href="authentication.html"><i class="fas fa-sign-in-alt white-text"></i>
+		<span class="icons-text white-text">Sign In</span></a></li>
+</ul>
+<!-- upload file input -->
+<input type="file"id='upload'class='hide'>
+<!-- download model -->
+<div id="download-modal" class="modal">
+    <div class="modal-content">
+	  <h4>Enter URL and name of the book</h4>
+		<input type="text" id="url-holder" placeholder='Book URL'>
+		<input type="text" id="name-holder" placeholder="Book name">
+
+    </div>
+    <div class="modal-footer">
+      <a href="" class="waves-effect waves-green btn btn-small" id="download">Download</a>
+    </div>
+  </div>
+<!-- books section -->
+<section class="container section" id="books-section">
+	<div class="input-field">
+			<input id="search" type="search" placeholder="Search books..." >
+			<label for="search"><i class="material-icons ">search</i></label></div>
+
+<div id="book-list" >
+	<h2 class="title">Your Library</h2>
+	<ul id="books-ul">
+		</ul>
+</section>
+<!-- page footer -->
+<footer class="page-footer grey darken-3">
+<div class="container">
+<div class="row">
+	<div class="col s12 l6">
+			<h5>Thanks</h5>
+			<p>Thank you very much for becoming one of the users of POLS.</p>
+			<p>If you are getting trouble with how does it work just watch the tutorial video in the header section.</p>
+			<p>Also if you need more help or have any advice or recomendation do not hesitate to contact me 
+				by calling me  sending me email or following me on facebook. </p> 
+				<p>Any comment, advice or recomendation from you is appericiated.</p>           
+	</div>
+	<div class="col s12 l4 offset-l2">
+		<h5>Connect</h5>
+		<ul>
+			<li><a href="https://www.facebook.com/hafsahussein.mohamed" class="grey-text text-lighten-3">
+				<i class="fab fa-facebook"></i> Facebook</a></li>
+			<li><a href="tel:00252616585556" class="grey-text text-lighten-3"><i class="fa fa-phone"></i> Call</a></li>
+			<li><a href="mailto:hafsahussein60@gmail.com" class="grey-text text-lighten-3"><i class="fas fa-envelope"></i> Email</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+<div class="footer-copyright grey darken-4">
+<div class="container center-align">&copy; 2019 Hafsa Hussein</div>
+</div>
+</footer>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+// Your web app's Firebase configuration
+var firebaseConfig = {
+apiKey: "AIzaSyASR_JjTt8mjf3supyF1pHdNhD7FGV-0JU",
+authDomain: "polsdatabase-f8594.firebaseapp.com",
+databaseURL: "https://polsdatabase-f8594.firebaseio.com",
+projectId: "polsdatabase-f8594",
+storageBucket: "polsdatabase-f8594.appspot.com",
+messagingSenderId: "765894232102",
+appId: "1:765894232102:web:99c79908ee2791dd"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth= firebase.auth();
+const storageRef=firebase.storage().ref()
+const db=firebase.firestore();
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="sweetalert2.all.js"></script>
+
+<script>
+	document.querySelector('#wactch').addEventListener('click',e=>{
+		e.preventDefault()
+		Swal.fire({
+		  title:'Sorry!',
+		  text:"Video is not available yet but it is coming soon in sha Allah",
+		  showConfirmButton:true,
+	  })
+	})
+// checkig the file extension
+function extension(str){
+	return str.slice(str.lastIndexOf('.'));	
+	}
+
+	const list=document.querySelector('#books-ul');
+function renderBook(doc,collection,data) {
+	
+	const li=document.createElement('li');
+	const nameHolder=document.createElement('div');
+	const bookName=document.createElement('p');
+	const downloadBTNHolder=document.createElement('div');
+	const downloadBTN=document.createElement('a');
+	const deleteBTNHolder=document.createElement('div');
+	const deleteBTN=document.createElement('a');
+		//add css classes
+		li.classList.add('row');
+		nameHolder.className='col s4 l5';
+		bookName.classList.add('truncate');
+		downloadBTNHolder.className='col s3 l2';
+		downloadBTN.className='btn purple darken-3 buttons';
+		deleteBTNHolder.className='col s2 offset-s2 l2';
+		deleteBTN.className='btn purple darken-3 buttons';
+		 		//set atributes
+		downloadBTN.setAttribute('href',data.url)
+		li.setAttribute('data-id',doc.id);
+
+			//set the inner text
+		 bookName.innerText=data.name;
+		 deleteBTN.innerText='delete';
+		 downloadBTN.innerText='download';
+	
+//append elements to the document
+deleteBTNHolder.appendChild(deleteBTN);
+downloadBTNHolder.appendChild(downloadBTN);
+nameHolder.appendChild(bookName);
+li.appendChild(nameHolder);
+li.appendChild(downloadBTNHolder);
+li.appendChild(deleteBTNHolder);
+list.appendChild(li);
+	//deleting data
+deleteBTNHolder.addEventListener('click',(e)=>{
+	e.stopPropagation();
+	var desertRef = storageRef.child(data.uid+'/'+data.name);
+
+// Delete the file
+desertRef.delete().then(function() {
+  // File deleted successfully
+		// console.log(db.collection(collection).doc(doc.id).data())
+
+	// console.log(docName);
+
+}).catch(function(error) {
+	Swal.fire({
+		  icon:'error',
+		  title:'Error',
+		  text:error.message,
+		  showConfirmButton:true,
+	  })
+	  });
+	  
+	  //deleting from database
+	  let id=e.target.parentElement.parentElement.getAttribute('data-id');
+	  db.collection(collection).doc(id).delete();
+
+})
+
+}
+//searching books
+const searchBar=document.querySelector('#books-section input');
+searchBar.addEventListener('keyup',function(e) {
+const term=e.target.value.toLowerCase();
+const books=list.querySelectorAll('li');
+books.forEach(function(book) {
+	const title=book.firstElementChild.textContent;
+	if(title.toLowerCase().indexOf(term)>-1) {
+		book.style.display='block';
+
+	}
+	else {
+		book.style.display='none';
+	}
+})
+})
+  //download book from other website
+function download(url,fileName){
+	const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+
+	fetch(proxyUrl+url).then(function(t){
+		return t.blob().then(b=>{
+			const a=document.createElement('a');
+			a.href=URL.createObjectURL(b);
+			a.setAttribute('download',fileName);
+			a.click();
+		})
+	})
+}
+const downloadFromWeb=document.querySelector("#download");
+const urlHolder=document.querySelector('#url-holder');
+const bookNameHolder=document.querySelector('#name-holder');
+const loggedOut=document.querySelectorAll(".logged-out");
+const loggedIn=document.querySelectorAll(".logged-in");
+//the real magic  occurs here
+	  auth.onAuthStateChanged(user=>{
+		  if(user&&user.emailVerified){
+        loggedIn.forEach(loggedInElement=>{
+			loggedInElement.classList.remove('hide');
+			const about=document.querySelectorAll('a[href="about.html"]')
+			about.forEach(aboutElement=>{
+				aboutElement.classList.remove('hide')
+			})
+		});
+
+		loggedOut.forEach(loggedOutElement=>{
+			loggedOutElement.classList.add('hide');
+		});
+		console.log("every thing is ok")
+		//download book from other website
+		
+		downloadFromWeb.addEventListener('click',e=>{
+			e.preventDefault();
+			download(urlHolder.value,bookNameHolder.value)
+		})
+			//  upload books to the firebase storage
+			  const fileElem=document.querySelector('#upload')
+			  fileElem.addEventListener('change',e=>{
+				for(let i=0;i<fileElem.files.length;i++){
+					let bookFiles=[];
+				 bookFiles[i]=fileElem.files[i];
+				
+				const validExtension=extension(bookFiles[i].name)== '.ppt'
+				||extension(bookFiles[i].name)== '.pptx'
+				||extension(bookFiles[i].name)== '.doc'
+				||extension(bookFiles[i].name)== '.docx'
+				||extension(bookFiles[i].name)== '.xls'
+				||extension(bookFiles[i].name)== '.xlsx'
+				||extension(bookFiles[i].name)== '.pdf'
+				||extension(bookFiles[i].name)== '.txt';
+				let uploadTask;
+				const bookRef=storageRef.child(user.uid+"/"+bookFiles[i].name)
+				if(validExtension)
+					uploadTask=bookRef.put(bookFiles[i])
+				///check if the upload process is completed
+			uploadTask.on('state_changed', snapshot=>{
+			 const progress =()=> (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+			 console.log(progress())
+			 const progressHolder=document.querySelector('#uploading-progress');
+			const progressbar=document.querySelector('#uploader');
+			// console.log(progressHolder.childNodes)
+			// console.log(progressbar)
+			progressHolder.classList.remove('hide');
+			progressbar.value=progress()
+
+		if(progressbar.value>=100){
+			progressHolder.classList.add('hide')
+		  Swal.fire({
+		  icon:'success',
+		  title:'successifully uploaded!',
+		  showConfirmButton:false,
+		  timer:1500
+	  })
+			}
+			}, error=> {
+			  // Handle unsuccessful uploads
+			  Swal.fire({
+		  icon:'error',
+		  title:'Error',
+		  text:error,
+		  showConfirmButton:true,
+	  })
+			}, ()=> {
+			  // Handle successful uploads on complete
+			  uploadTask.snapshot.ref.getDownloadURL().then(downloadURL=> {
+					  db.collection(user.uid).add({
+					name:bookFiles[i].name,
+					url:downloadURL,
+					uid:user.uid,
+					dataSize:bookFiles[i].size
+					})
+			  })
+			})}
+			  })
+const fileSelect=document.querySelectorAll('.upload-file');
+fileSelect.forEach(button=>{
+	button.addEventListener('click',e=>{
+		if(fileElem)
+		fileElem.click()
+		});
+})
+	db.collection(user.uid).onSnapshot (snapshot=>{
+	let changes=snapshot.docChanges();
+	changes.forEach(change=>{
+		if(change.type=="added") {
+			renderBook(change.doc,user.uid,change.doc.data());
+		}
+		else if(change.type=='removed'){
+			db.collection(user.uid).where('name','==',change.doc.data().name).get().then((snapshot)=> {
+	snapshot.docs.forEach(doc=>{
+		db.collection(user.uid).doc(doc.id).delete();
+	
+			});
+})
+			let li=list.querySelector('[data-id='+change.doc.id+']');
+			list.removeChild(li);
+		}
+	})
+})
+
+		}
+		  	else if(user &&!user.emailVerified) {
+				Swal.fire({
+		  icon:'success',
+		  title:'Verification sent',
+          text:`Verification link sent to ${user.email}
+Verify your email and then refresh the page to continue to the system`,
+          showConfirmButton:true,
+	  })
+	  const about=document.querySelectorAll('a[href="about.html"]')
+			about.forEach(aboutElement=>{
+				aboutElement.classList.remove('hide')
+			})
+			loggedIn.forEach(loggedInElement=>{
+			loggedInElement.classList.add('hide');
+		});
+
+		loggedOut.forEach(loggedOutElement=>{
+			loggedOutElement.classList.remove('hide');
+		});
+		}
+	else{
+		const about=document.querySelectorAll('a[href="about.html"]')
+			about.forEach(aboutElement=>{
+				aboutElement.classList.remove('hide')
+			})
+        loggedIn.forEach(loggedInElement=>{
+			loggedInElement.classList.add('hide');
+		});
+
+		loggedOut.forEach(loggedOutElement=>{
+			loggedOutElement.classList.remove('hide');
+		});
+}
+ 	  })
+	   //logout
+const logout= document.querySelectorAll('.logout');
+logout.forEach(one=>{
+	one.addEventListener('click',(e)=>{
+		e.preventDefault();
+		auth.signOut().then(()=>{
+            console.log("signed out")
+		})
+	});
+})
+//})
+
+// setup materialize components
+$(window).on('load',function(){
+	$(".loading-animtion").delay(2000).fadeOut();
+})
+$(document).ready(function(){
+	$('.sidenav').sidenav({
+	  closeOnClick: true
+	});
+	$('.modal').modal();
+	$('.tabs').tabs();
+	$('.carousel.carousel-slider').carousel({
+    fullWidth: true,
+	indicators: true
+
+  });
+  autoplay();
+  function autoplay(){
+	  $('.carousel').carousel('next');
+	  setTimeout(autoplay,4000)
+  }
+  });
+</script>
+<script src="cors.json"></script>
+</body>
+</html>

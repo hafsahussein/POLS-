@@ -1,0 +1,160 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body{
+	background: #ddd;
+	/* padding: 10px; */
+}
+.loading-animtion{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #004c66;
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.loading-container{
+	width: 40px;
+}
+.box{
+	width: 15px;
+	height: 15px;
+	background-color: #008cbc;
+	display: inline-block;
+	animation: pulse 0.6s ease-in infinite alternate;
+}
+.box2, .box3{
+	animation-delay: 0.6s;
+}
+@Keyframes pulse {
+	100% {
+		opacity: 0;
+	}
+}
+.carousel{
+	height: 90vh !important;
+	border-radius: 0 0 25% 0;
+	position: relative !important;
+	top: 50px !important;
+} 
+.carousel p{
+	position: absolute;
+	top: 20%;
+	font-size: 1.5rem !important;
+	font-weight: 400px !important;
+	text-align: center;
+	color: white !important;
+}
+.carousel #one{
+	background:  linear-gradient(rgba(25,25,112,0.5),rgba(25,25,112,0.5)),url(crouselimg1.jpg);
+	background-size: cover;
+	background-position: center;
+
+}
+.carousel #two{
+	background:  linear-gradient(rgba(25,25,112,0.5),rgba(25,25,112,0.5)),url(crouselimg2.jpg);
+	background-size: cover;
+	background-position: right;
+
+
+}
+.carousel #three{
+	background:  linear-gradient(rgba(25,25,112,0.5),rgba(25,25,112,0.5)),url(crouselimg3.jpg);
+	background-size: cover;
+	background-position: center;
+
+}
+.carousel #four{
+	background:  linear-gradient(rgba(25,25,112,0.5),rgba(25,25,112,0.5)),url(crouselimg4.jpg);
+	background-size: cover;
+	background-position: center;
+}
+
+nav{
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	
+}
+.modal{
+width:300px;
+	height: 250px;
+}
+.modal .modal-content{
+	padding: 5px;
+	padding-bottom: 0;
+	
+}
+#brand-logo{
+	margin-left: 80px;
+	font-size: 3vh;
+
+}
+
+.sidenav li a{
+	font-size: 20px;
+}
+@media screen and (min-width:992px){
+
+	#logged-in .icons-text{
+		margin-left: 10px;
+	}
+	nav .right{
+	margin-right:50px;
+	}
+}
+.sidenav{
+	width: 270px;
+}
+.buttons{
+	text-transform: capitalize;
+}
+.section{
+	margin-top: 7vh;
+	padding-top: 4vw;
+	padding-bottom: 4vw;
+}
+@media screen and (max-width:360px) {
+	#brand-logo{
+		font-size: 2vh;
+	}
+		}
+/* #logged-out{
+	padding-top: 15vh;
+	height: fit-content;
+	min-height: 100%;
+	width: 100%;
+	background-image: linear-gradient(rgba(57, 57, 107, 0.5),rgba(25,25,112,0.5)),url(bgimage.jpg);
+	background-size: 100% 100%;
+}
+#logged-out .section{
+	position: relative;
+	top: 20%;
+	max-width: 500px;
+} */
+.tabs .indicator{
+	background-color: #1a237e;
+}
+.tabs .tab a:focus, .tabs .tab a:focus.active{
+	background: transparent ;
+}
+#sign-in-with-google, #sign-in-with-facebook{
+	margin-bottom: 3vh;
+
+}
+
+a[href="forget-password.html"]{
+	float: right;
+	position: relative;
+	bottom: 20px; 
+	text-decoration: underline; 
+	color: aquamarine; 
+	font-size: 15px;
+}
